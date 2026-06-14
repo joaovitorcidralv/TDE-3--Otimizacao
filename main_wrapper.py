@@ -19,24 +19,32 @@ OUTPUT_NPY = "results/output/wrapper_resultados.npy"
 
 # Para evitar que o Forward Selection demore dias rodando nos 784 atributos,
 # definimos um limite máximo de features e uma paciência para parada precoce.
-MAX_FEATURES_TO_SELECT = 5  
-PATIENCE = 3  # Quantas iterações sem melhora significativa na acurácia para interromper a busca
+MAX_FEATURES_TO_SELECT = 50  
+PATIENCE = 5  # Quantas iterações sem melhora significativa na acurácia para interromper a busca
 
 
 def forward_selection(X_train, y_train, max_features=30, patience=3):
     """
-    Implementa o método Wrapper Forward Selection utilizando validação interna (holdout)
-    nos dados de treino para guiar a busca de features.
+    Versão Otimizada do Forward Selection usando subamostragem para acelerar a busca.
     """
     print("\nIniciando a busca Wrapper (Forward Selection)...")
     
-    # Criar divisão interna de validação 
-    # garantindo que a busca utilize apenas as informações contidas nos dados de treinamento.
-    n_samples = X_train.shape[0]
+    TAMANHO_AMOSTRA_BUSCA = 3000 
+    if X_train.shape[0] > TAMANHO_AMOSTRA_BUSCA:
+        # Pega as primeiras X amostras 
+        X_busca = X_train[:TAMANHO_AMOSTRA_BUSCA]
+        y_busca = y_train[:TAMANHO_AMOSTRA_BUSCA]
+    else:
+        X_busca = X_train
+        y_busca = y_train
+
+    # Divisão interna de validação sobre a amostra (80% treino busca / 20% val busca)
+    n_samples = X_busca.shape[0]
     split_idx = int(n_samples * 0.8)
     
-    X_tr_inner, X_val_inner = X_train[:split_idx], X_train[split_idx:]
-    y_tr_inner, y_val_inner = y_train[:split_idx], y_train[split_idx:]
+    X_tr_inner, X_val_inner = X_busca[:split_idx], X_busca[split_idx:]
+    y_tr_inner, y_val_inner = y_busca[:split_idx], y_busca[split_idx:]
+    # ─────────────────────────────────────────────────────────────────────────────
     
     n_features = X_train.shape[1]
     features_selecionadas = []
@@ -49,15 +57,16 @@ def forward_selection(X_train, y_train, max_features=30, patience=3):
         melhor_acuracia_it = -1.0
         melhor_feature_it = None
         
-        # Testa cada feature restante adicionada ao conjunto atual
+        t_inicio_it = time.time()
+        
+        # Testa cada feature restante
         for feature in features_restantes:
             features_teste = features_selecionadas + [feature]
             
-            # Treina a árvore de decisão com parâmetros default com o subconjunto de atributos
-            clf = DecisionTreeClassifier(random_state=42)
+            # max_depth limitado agiliza muito o treino interno da busca
+            clf = DecisionTreeClassifier(max_depth=10, random_state=1)
             clf.fit(X_tr_inner[:, features_teste], y_tr_inner)
             
-            # Critério de seleção: acurácia no subconjunto de validação interna
             preds = clf.predict(X_val_inner[:, features_teste])
             acuracia = accuracy_score(y_val_inner, preds)
             
@@ -69,9 +78,9 @@ def forward_selection(X_train, y_train, max_features=30, patience=3):
             features_selecionadas.append(melhor_feature_it)
             features_restantes.remove(melhor_feature_it)
             
-            print(f"Iteração {i+1}: Adicionada Feature {melhor_feature_it} | Acurácia Val Interna: {melhor_acuracia_it:.4f}")
+            t_fim_it = time.time() - t_inicio_it
+            print(f"Iteração {i+1}: Add Feature {melhor_feature_it} | Acurácia: {melhor_acuracia_it:.4f} | Tempo: {t_fim_it:.2f}s")
             
-            # Verifica critério de parada por paciência (Early Stopping)
             if melhor_acuracia_it > melhor_acuracia_global + 0.001:
                 melhor_acuracia_global = melhor_acuracia_it
                 sem_melhora_cont = 0
@@ -79,7 +88,7 @@ def forward_selection(X_train, y_train, max_features=30, patience=3):
                 sem_melhora_cont += 1
                 
             if sem_melhora_cont >= patience:
-                print(f"Parada precoce ativada: {patience} iterações sem melhora significativa.")
+                print(f"Parada precoce ativada: {patience} iterações sem melhora.")
                 break
         else:
             break
@@ -121,7 +130,7 @@ def main():
     X_train_sel = X_train_norm[:, features_selecionadas]
     X_test_sel = X_test_norm[:, features_selecionadas]
 
-    clf_wrapper = DecisionTreeClassifier(random_state=42)
+    clf_wrapper = DecisionTreeClassifier(random_state=1)
     
     tempo_inicio_treino = time.time()
     clf_wrapper.fit(X_train_sel, y_train)
