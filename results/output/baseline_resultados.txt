@@ -1,0 +1,28 @@
+==================================================
+RESULTADOS — BASELINE
+==================================================
+Modelo               : Decision Tree (random_state=1)
+Features utilizadas  : 784 / 784
+Porcentagem features : 100.00%
+Acurácia (teste)     : 79.19%
+Tempo de treinamento : 44.7244 s
+Tempo de busca       : N/A
+
+Relatório por classe:
+              precision    recall  f1-score   support
+
+ T-shirt/top       0.75      0.75      0.75      1000
+     Trouser       0.95      0.94      0.95      1000
+    Pullover       0.64      0.66      0.65      1000
+       Dress       0.81      0.78      0.79      1000
+        Coat       0.66      0.64      0.65      1000
+      Sandal       0.92      0.89      0.90      1000
+       Shirt       0.53      0.54      0.53      1000
+     Sneaker       0.87      0.89      0.88      1000
+         Bag       0.91      0.92      0.91      1000
+  Ankle boot       0.89      0.91      0.90      1000
+
+    accuracy                           0.79     10000
+   macro avg       0.79      0.79      0.79     10000
+weighted avg       0.79      0.79      0.79     10000
+==================================================

@@ -1,0 +1,28 @@
+==================================================
+RESULTADOS — GA
+==================================================
+Modelo               : Decision Tree (random_state=1)
+Features utilizadas  : 391 / 784
+Porcentagem features : 49.87%
+Acurácia (teste)     : 80.00%
+Tempo de treinamento : 19.0735 s
+Tempo de busca       : 1583.9306 s
+
+Relatório por classe:
+              precision    recall  f1-score   support
+
+ T-shirt/top       0.75      0.74      0.75      1000
+     Trouser       0.95      0.94      0.95      1000
+    Pullover       0.66      0.68      0.67      1000
+       Dress       0.79      0.78      0.79      1000
+        Coat       0.69      0.67      0.68      1000
+      Sandal       0.91      0.90      0.90      1000
+       Shirt       0.55      0.57      0.56      1000
+     Sneaker       0.88      0.90      0.89      1000
+         Bag       0.91      0.91      0.91      1000
+  Ankle boot       0.91      0.91      0.91      1000
+
+    accuracy                           0.80     10000
+   macro avg       0.80      0.80      0.80     10000
+weighted avg       0.80      0.80      0.80     10000
+==================================================

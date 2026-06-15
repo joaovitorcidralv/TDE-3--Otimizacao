@@ -1,0 +1,28 @@
+==================================================
+RESULTADOS — WRAPPER (FORWARD SELECTION)
+==================================================
+Modelo               : Decision Tree (random_state=1)
+Features utilizadas  : 42 / 784
+Porcentagem features : 5.36%
+Acurácia (teste)     : 71.26%
+Tempo de treinamento : 1.2904 s
+Tempo de busca       : 589.2959 s
+
+Relatório por classe:
+              precision    recall  f1-score   support
+
+ T-shirt/top       0.67      0.66      0.66      1000
+     Trouser       0.94      0.93      0.93      1000
+    Pullover       0.56      0.57      0.57      1000
+       Dress       0.72      0.69      0.70      1000
+        Coat       0.55      0.56      0.56      1000
+      Sandal       0.81      0.83      0.82      1000
+       Shirt       0.43      0.45      0.44      1000
+     Sneaker       0.76      0.78      0.77      1000
+         Bag       0.89      0.86      0.88      1000
+  Ankle boot       0.82      0.80      0.81      1000
+
+    accuracy                           0.71     10000
+   macro avg       0.71      0.71      0.71     10000
+weighted avg       0.71      0.71      0.71     10000
+==================================================
